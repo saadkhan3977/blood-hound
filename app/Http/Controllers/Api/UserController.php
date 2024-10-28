@@ -132,7 +132,7 @@ class UserController extends BaseController
 			$olduser->from = $request->from;
 			$olduser->phone = $request->phone;
 			$olduser->work = $request->work;
-			$olduser->phone_2 = $request->phone_2;
+			// $olduser->phone_2 = $request->phone_2;
 			$olduser->photo = $profile;
 			$olduser->save();
 
