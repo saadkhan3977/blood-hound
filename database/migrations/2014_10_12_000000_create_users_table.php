@@ -16,6 +16,10 @@ return new class extends Migration
             // $table->string('work')->nullable();
             $table->string('email')->unique();
             $table->string('phone')->nullable();
+            $table->string('phone_2')->nullable();
+            $table->string('from')->nullable();
+            $table->string('live_in')->nullable();
+            $table->string('work')->nullable();
             // $table->string('phone2')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('email_code')->nullable();
