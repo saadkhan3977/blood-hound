@@ -17,11 +17,11 @@ class Post extends Model
 
     public function locations()
     {
-        return $this->belongsToMany(PostLocation::class);
+        return $this->hasMany(PostLocation::class);
     }
 
     public function tags()
     {
-        return $this->belongsToMany(PostTag::class, 'post_tags');
+        return $this->hasMany(PostTag::class);
     }
 }

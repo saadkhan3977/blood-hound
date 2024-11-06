@@ -23,10 +23,11 @@ class PostController extends Controller
     {
         try
         {
-            $post = Post::where('user_id',Auth::id())->get();
+            $post = Post::with('images','locations','tags')->where('user_id',Auth::id())->get();
             return response()->json(['message' => 'Post Lists','post_list'=>$post], 201);
-        } catch (\Exception $e) {
-            \DB::rollBack();
+        } 
+        catch (\Exception $e) 
+        {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
