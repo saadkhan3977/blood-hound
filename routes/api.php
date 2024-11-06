@@ -65,7 +65,7 @@ Route::group(['middleware' => ['api','auth:api'], 'prefix' => 'auth'], function 
 	Route::get('message_list/{id}',[App\Http\Controllers\Api\MessageController::class,'message_list']);
 	Route::get('product',[App\Http\Controllers\Api\ProductController::class,'index']);
     Route::post('profile', [\App\Http\Controllers\Api\UserController::class, 'profile']);  
-	Route::resource('document',App\Http\Controllers\Api\DocumentController::class);
+	Route::resource('post',App\Http\Controllers\Api\PostController::class);
 	Route::resource('pdf',App\Http\Controllers\Api\PDFController::class);
     
     Route::post('/donate', [App\Http\Controllers\Api\DonateController::class, 'store']);

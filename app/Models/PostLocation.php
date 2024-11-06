@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Donate extends Model
+class PostLocation extends Model
 {
     use HasFactory;
     protected $guarded =[];
 
-    public function user()
+    public function posts()
     {
-        return $this->hasOne(\App\Models\User::class,'id','user_id');
+        return $this->belongsToMany(Post::class);
     }
 }
