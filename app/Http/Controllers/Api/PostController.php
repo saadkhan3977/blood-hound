@@ -8,6 +8,8 @@ use App\Models\Post;
 use App\Models\PostImage;
 use App\Models\PostTag;
 use App\Models\PostLocation;
+use Auth;
+
 use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
@@ -19,7 +21,14 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        try
+        {
+            $post = Post::where('user_id',Auth::id())->get();
+            return response()->json(['message' => 'Post Lists','post_list'=>$post], 201);
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
