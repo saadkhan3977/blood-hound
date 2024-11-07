@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('post_id')->nullable();
             $table->text('file')->nullable();
-            $table->text('path')->nullable();
+            $table->text('type')->nullable();
             $table->timestamps();
             $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
         });
