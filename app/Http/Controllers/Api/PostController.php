@@ -50,25 +50,27 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = \Validator::make($request->all(),[
-            'description' => 'required|string',
-            'privacy' => 'required',
-            'start_time' => 'required',
-            'end_time' => 'required',
-            'category' => 'required|string',
-            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'locations' => 'required|array',
-            // 'locations.*' => 'exists:locations,id',
-            'tags' => 'required|array',
-            // 'tags.*' => 'exists:post_tags,id',
-        ]);
+        try 
+        {
+            $validated = \Validator::make($request->all(),[
+                'description' => 'required|string',
+                'privacy' => 'required',
+                'start_time' => 'required',
+                'end_time' => 'required',
+                'category' => 'required|string',
+                'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'locations' => 'required|array',
+                // 'locations.*' => 'exists:locations,id',
+                'tags' => 'required|array',
+                // 'tags.*' => 'exists:post_tags,id',
+            ]);
 
-        // Start the transaction to create the post
-        // \DB::beginTransaction();
-        if($validated->fails()) {
-            return response()->json(['success'=>false,'message'=>$validated->errors()],500);    
-        }
-        try {
+            // Start the transaction to create the post
+            // \DB::beginTransaction();
+            if($validated->fails()) {
+                return response()->json(['success'=>false,'message'=>$validated->errors()],500);    
+            }
+        
             // Create the post
             $post = Post::create([
                 'user_id' => \Auth::user()->id,
@@ -113,10 +115,11 @@ class PostController extends Controller
             }
 
             // Commit the transaction
-            \DB::commit();
+            // \DB::commit();
 
             return response()->json(['message' => 'Post created successfully'], 201);
-        } catch (\Exception $e) {
+        } 
+        catch (\Exception $e) {
             \DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 500);
         }
