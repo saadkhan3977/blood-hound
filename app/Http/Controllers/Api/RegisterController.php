@@ -63,7 +63,7 @@ class RegisterController extends BaseController
 		$input['email_verified_at'] = Carbon::now();
         $user = User::create($input);
 
-        $token =  $user->createToken('dr-peter')->plainTextToken;
+        $token =  $user->createToken('blood-hound')->plainTextToken;
         $users = $this->userinfo($request->email);
 
 		return response()->json(['success'=>true,'message'=>'User register successfully' ,'token'=>$token,'user_info'=>$users]);
