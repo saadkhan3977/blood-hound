@@ -62,7 +62,7 @@ class PostController extends BaseController
                 'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'location' => 'required|array',
                 'tags' => 'required|array',
-                'tags.*' => 'exists:tags,id',
+                'tags.*' => 'exists:users,id',
             ]);
 
             // Start the transaction to create the post
