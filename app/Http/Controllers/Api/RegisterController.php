@@ -123,15 +123,9 @@ class RegisterController extends BaseController
     }
     public function user(Request $request)
     {
-        if(Auth::check())
-        {
-            $success['user_info'] = $request->user();
-            return $this->sendResponse($success, 'Current user successfully.');
-        }
-        else
-        {
-            return $this->sendError('No user in Session .');
-        }
+        
+        $success['tag_list'] = User::where('role','user')->get();
+        return $this->sendResponse($success, 'Tags Lists');
     }
     public function verify(Request $request)
     {

@@ -66,11 +66,13 @@ Route::group(['middleware' => ['api','auth:api'], 'prefix' => 'auth'], function 
 	Route::get('product',[App\Http\Controllers\Api\ProductController::class,'index']);
     Route::post('profile', [\App\Http\Controllers\Api\UserController::class, 'profile']);  
 	Route::resource('post',App\Http\Controllers\Api\PostController::class);
-	Route::resource('pdf',App\Http\Controllers\Api\PDFController::class);
+    Route::get('tag_list', [\App\Http\Controllers\Api\RegisterController::class, 'user']); // USer List
+
+	// Route::resource('pdf',App\Http\Controllers\Api\PDFController::class);
     
-    Route::post('/donate', [App\Http\Controllers\Api\DonateController::class, 'store']);
-    Route::post('/checkout', [App\Http\Controllers\Api\OrderController::class, 'store']);
-    Route::get('/orders/list', [App\Http\Controllers\Api\OrderController::class, 'index']);
+    // Route::post('/donate', [App\Http\Controllers\Api\DonateController::class, 'store']);
+    // Route::post('/checkout', [App\Http\Controllers\Api\OrderController::class, 'store']);
+    // Route::get('/orders/list', [App\Http\Controllers\Api\OrderController::class, 'index']);
 
     // Route::post('review',[App\Http\Controllers\Api\UserController::class,'review']);
     // Route::get('review',[App\Http\Controllers\Api\UserController::class,'review_list']);
@@ -123,7 +125,6 @@ Route::group(['middleware' => ['api','auth:api'], 'prefix' => 'auth'], function 
     // Route::post('addcard', [\App\Http\Controllers\UserCardController::class, 'addcard']);
 	// Route::post('updatecard', [\App\Http\Controllers\UserCardController::class, 'updatecard']); 
     // Route::get('me', [\App\Http\Controllers\Api\RegisterController::class, 'me']);
-    Route::get('user', [\App\Http\Controllers\Api\RegisterController::class, 'user']);
     // Route::get('orders', [\App\Http\Controllers\Api\OrderController::class, 'orders']);
     // Route::get('children_orders', [\App\Http\Controllers\Api\OrderController::class, 'childorders']);
     // Route::post('order/{status}', [\App\Http\Controllers\Api\OrderController::class, 'orders_status']);
