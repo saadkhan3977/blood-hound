@@ -56,10 +56,10 @@ class PostController extends Controller
             'start_time' => 'required',
             'end_time' => 'required',
             'category' => 'required|string',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'locations' => 'array',
+            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'locations' => 'required|array',
             // 'locations.*' => 'exists:locations,id',
-            'tags' => 'array',
+            'tags' => 'required|array',
             // 'tags.*' => 'exists:post_tags,id',
         ]);
 
