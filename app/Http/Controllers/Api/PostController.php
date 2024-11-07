@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Api\BaseController as BaseController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Post;
@@ -12,7 +13,7 @@ use Auth;
 
 use Illuminate\Support\Facades\Validator;
 
-class PostController extends Controller
+class PostController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -59,18 +60,18 @@ class PostController extends Controller
                 'end_time' => 'required',
                 'category' => 'required|string',
                 'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'locations' => 'required|array',
-                // 'locations.*' => 'exists:locations,id',
+                'location' => 'required|array',
                 'tags' => 'required|array',
-                // 'tags.*' => 'exists:post_tags,id',
+                'tags.*' => 'exists:tags,id',
             ]);
 
             // Start the transaction to create the post
             // \DB::beginTransaction();
             if($validated->fails()) {
-                return response()->json(['success'=>false,'message'=>$validated->errors()],500);    
+                return $this->sendError($validated->errors()->first());
             }
-        
+
+            
             // Create the post
             $post = Post::create([
                 'user_id' => \Auth::user()->id,
@@ -80,6 +81,15 @@ class PostController extends Controller
                 'start_time' => $request->start_time,
                 'end_time' => $request->end_time,
             ]);
+
+            if ($request->has('location')) {
+                foreach ($request->location as $location) {
+                    PostLocation::create([
+                        'post_id' => $post->id,  // Associate the tag with the created post
+                        'location' => $location,  // Store the tag name directly
+                    ]);
+                }
+            }
 
             // Handle images
             if ($request->hasFile('images')) {
@@ -92,24 +102,15 @@ class PostController extends Controller
                 }
             }
 
-            // Attach locations
-            if ($request->has('location')) {
-                foreach ($request->location as $tagName) {
-                    // Create a PostTag for each tag
-                    PostLocation::create([
-                        'post_id' => $post->id,  // Associate the tag with the created post
-                        'location' => $tagName,  // Store the tag name directly
-                    ]);
-                }
-            }
+            
 
             // Attach tags
             if ($request->has('tags')) {
-                foreach ($request->tags as $tagName) {
+                foreach ($request->tags as $tagid) {
                     // Create a PostTag for each tag
                     PostTag::create([
                         'post_id' => $post->id,  // Associate the tag with the created post
-                        'tag' => $tagName,  // Store the tag name directly
+                        'tag_id' => $tagid,  // Store the tag name directly
                     ]);
                 }
             }
