@@ -32,6 +32,21 @@ class PostController extends BaseController
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    
+    public function gallery(Request $request)
+    {
+        try
+        {
+            $file = ($request->type == 'image') ? 'image' : 'video';
+            $postids = Post::where('user_id',Auth::id())->get()->pluck('id');
+            $gallery = PostImage::whereIn('post_id',$postids)->where('type',$file)->get();
+            return response()->json(['message' => 'Gallery Lists','gallery_list'=>$gallery], 201);
+        } 
+        catch (\Exception $e) 
+        {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 
     /**
      * Show the form for creating a new resource.

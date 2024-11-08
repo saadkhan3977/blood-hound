@@ -67,6 +67,7 @@ Route::group(['middleware' => ['api','auth:api'], 'prefix' => 'auth'], function 
     Route::post('profile', [\App\Http\Controllers\Api\UserController::class, 'profile']);  
 	Route::resource('post',App\Http\Controllers\Api\PostController::class);
     Route::get('tag_list', [\App\Http\Controllers\Api\RegisterController::class, 'user']); // USer List
+    Route::get('gallery', [\App\Http\Controllers\Api\PostController::class, 'gallery']); // USer List
 
 	// Route::resource('pdf',App\Http\Controllers\Api\PDFController::class);
     
