@@ -109,7 +109,7 @@ class PostController extends BaseController
                 'start_time' => 'required',
                 'end_time' => 'required',
                 'category' => 'required|string',
-                'images.*' => 'required|mimes:jpeg,png,jpg,gif,svg,mp4|max:8048',
+                //'images.*' => 'required|mimes:jpeg,png,jpg,gif,svg,mp4|max:8048',
                 'location' => 'required|array',
                 'tags' => 'required|array',
                 'tags.*' => 'exists:users,id',
