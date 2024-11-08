@@ -9,6 +9,7 @@ use App\Models\Post;
 use App\Models\PostImage;
 use App\Models\PostTag;
 use App\Models\PostLocation;
+use App\Models\PostLike;
 use Auth;
 
 use Illuminate\Support\Facades\Validator;
@@ -24,7 +25,7 @@ class PostController extends BaseController
     {
         try
         {
-            $post = Post::with('images','locations','tags')->where('user_id',Auth::id())->get();
+            $post = Post::withCount('like')->with('images','locations','tags')->where('user_id',Auth::id())->get();
             return response()->json(['message' => 'Post Lists','post_list'=>$post], 201);
         } 
         catch (\Exception $e) 
@@ -45,6 +46,40 @@ class PostController extends BaseController
         catch (\Exception $e) 
         {
             return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function like(Request $request)
+    {
+         try
+         {
+             $validator = Validator::make($request->all(), [
+                 'post_id' => 'required|exists:posts,id',
+                //  'profile_id' => 'required',
+             ]);  
+             
+             
+             if($validator->fails())
+             {
+                 return $this->sendError($validator->errors()->first());
+             }
+ 
+            $input['user_id'] = Auth::id();
+            $input['post_id'] = $request->post_id;
+            $data = PostLike::where(['user_id'=>Auth::id(),'post_id' => $request->post_id])->first();
+            if($data)
+            {
+                $data->delete();
+                return response()->json(['success'=>true,'message'=>'Post Dislike Successfully']);
+            }
+            else
+            {
+                PostLike::create($input);
+                return response()->json(['success'=>true,'message'=>'Post like Successfully']);
+            }
+        }
+        catch(\Eception $e){
+            return $this->sendError($e->getMessage());    
         }
     }
 
@@ -86,7 +121,6 @@ class PostController extends BaseController
                 return $this->sendError($validated->errors()->first());
             }
 
-            
             // Create the post
             $post = Post::create([
                 'user_id' => \Auth::user()->id,

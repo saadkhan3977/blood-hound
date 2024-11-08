@@ -24,4 +24,9 @@ class Post extends Model
     {
         return $this->hasMany(PostTag::class);
     }
+
+    public function like()
+    {
+        return $this->hasMany(PostLike::class);
+    }
 }
