@@ -144,7 +144,7 @@ class PostController extends BaseController
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $image) {
                     $type = $image->getClientOriginalExtension();
-                    $filetype = ($type == '.mp4') ? 'video' : 'image' ;
+                    $filetype = ($type == 'mp4') ? 'video' : 'image' ;
                     $imageUrl = $image->store('posts/images', 'public');
                     PostImage::create([
                         'post_id' => $post->id,
