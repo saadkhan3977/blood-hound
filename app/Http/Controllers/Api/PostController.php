@@ -25,7 +25,11 @@ class PostController extends BaseController
     {
         try
         {
-            $post = Post::withCount('like','comment')->with('my_like','comment','images','locations','tags')->where('user_id',Auth::id())->get();
+            $userid = Auth::id();
+            $post = Post::withCount('like','comment')->with('my_like','comment','images','locations','tags')
+            ->orWhereHas('my_like', function ($query) use ($userid) {
+                $query->where('user_id', $userid);
+            })->where('user_id',Auth::id())->get();
             return response()->json(['message' => 'Post Lists','post_list'=>$post], 201);
         } 
         catch (\Exception $e) 
