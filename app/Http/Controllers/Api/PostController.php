@@ -25,7 +25,7 @@ class PostController extends BaseController
     {
         try
         {
-            $post = Post::withCount('like','comment')->with('comment','images','locations','tags')->where('user_id',Auth::id())->get();
+            $post = Post::withCount('like','comment')->with('my_like','comment','images','locations','tags')->where('user_id',Auth::id())->get();
             return response()->json(['message' => 'Post Lists','post_list'=>$post], 201);
         } 
         catch (\Exception $e) 
@@ -109,7 +109,6 @@ class PostController extends BaseController
                 'start_time' => 'required',
                 'end_time' => 'required',
                 'category' => 'required|string',
-                //'images.*' => 'required|mimes:jpeg,png,jpg,gif,svg,mp4|max:8048',
                 'location' => 'required|array',
                 'tags' => 'required|array',
                 'tags.*' => 'exists:users,id',
@@ -144,7 +143,7 @@ class PostController extends BaseController
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $image) {
                     $type = $image->getClientOriginalExtension();
-                    $filetype = ($type == 'mp4') ? 'video' : 'image' ;
+                    $filetype = ($type == 'video/mp4') ? 'video' : 'image' ;
                     $imageUrl = $image->store('posts/images', 'public');
                     PostImage::create([
                         'post_id' => $post->id,
