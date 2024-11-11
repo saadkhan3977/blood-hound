@@ -10,6 +10,13 @@ class Post extends Model
     use HasFactory;
     protected $guarded =[];
 
+    public function my_like()
+	{
+		$profileId = request()->input('profile_id'); // Assuming you are using Laravel's request helper
+	   //print_r($profileId);die;
+	   return $this->hasOne(\App\Models\PostLike::class, 'post_id', 'id')->where('profile_id', request()->input('profile_id'));
+	}
+    
     public function images()
     {
         return $this->hasMany(PostImage::class);
