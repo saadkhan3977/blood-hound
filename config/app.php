@@ -211,7 +211,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         'Image' => Intervention\Image\Facades\Image::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
-        'Helper' => App\Helpers\Helper::class,
+        // 'Helper' => App\Helpers\Helper::class,
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 

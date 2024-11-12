@@ -30,7 +30,7 @@ Route::get('cron/plane', [\App\Http\Controllers\Api\RegisterController::class, '
 
 Route::post('register', [\App\Http\Controllers\Api\RegisterController::class, 'register']);
 Route::get('noauth', [\App\Http\Controllers\Api\RegisterController::class, 'noauth'])->name('noauth');
- 
+
 
 Route::any('login', [\App\Http\Controllers\Api\RegisterController::class, 'login'])->name('login');
 Route::any('verify', [\App\Http\Controllers\Api\RegisterController::class, 'verify']);
@@ -40,7 +40,7 @@ Route::post('password/code/check', [\App\Http\Controllers\Api\CodeCheckControlle
 // Route::get('guide', [\App\Http\Controllers\Api\CMSController::class, 'guide']);
 // Route::get('term/conditions', [\App\Http\Controllers\Api\CMSController::class, 'termanscondition']);
 
-Route::group(['middleware' => ['api','auth:api'], 'prefix' => 'auth'], function () 
+Route::group(['middleware' => ['api','auth:api'], 'prefix' => 'auth'], function ()
 {
 
 
@@ -53,10 +53,10 @@ Route::group(['middleware' => ['api','auth:api'], 'prefix' => 'auth'], function 
     //         'createdAt' => $request->createdAt,
     //         'user' => $request->user,
     //     ];
-    
+
     //     // Broadcast the event
     //     broadcast(new MessageSent((object)$message))->toOthers();
-    
+
     //     return response()->json(['status' => 'Message broadcasted']);
     // });
 
@@ -64,15 +64,15 @@ Route::group(['middleware' => ['api','auth:api'], 'prefix' => 'auth'], function 
 	Route::get('chat_list',[App\Http\Controllers\Api\MessageController::class,'chat_list']);
 	Route::get('message_list/{id}',[App\Http\Controllers\Api\MessageController::class,'message_list']);
 	Route::get('product',[App\Http\Controllers\Api\ProductController::class,'index']);
-    Route::post('profile', [\App\Http\Controllers\Api\UserController::class, 'profile']);  
+    Route::post('profile', [\App\Http\Controllers\Api\UserController::class, 'profile']);
 	Route::resource('post',App\Http\Controllers\Api\PostController::class);
     Route::get('tag_list', [\App\Http\Controllers\Api\RegisterController::class, 'user']); // USer List
     Route::get('gallery', [\App\Http\Controllers\Api\PostController::class, 'gallery']); // USer List
     Route::post('post_like', [\App\Http\Controllers\Api\PostController::class,'like']);
-    Route::resource('comment', \App\Http\Controllers\Api\CommentController::class); 
+    Route::resource('comment', \App\Http\Controllers\Api\CommentController::class);
 
 	// Route::resource('pdf',App\Http\Controllers\Api\PDFController::class);
-    
+
     // Route::post('/donate', [App\Http\Controllers\Api\DonateController::class, 'store']);
     // Route::post('/checkout', [App\Http\Controllers\Api\OrderController::class, 'store']);
     // Route::get('/orders/list', [App\Http\Controllers\Api\OrderController::class, 'index']);
@@ -95,7 +95,7 @@ Route::group(['middleware' => ['api','auth:api'], 'prefix' => 'auth'], function 
 	//     Route::resource('bid_help',App\Http\Controllers\Api\Member\BidHelpController::class);
     //     route::get('negotiator',[App\Http\Controllers\Api\Member\QuoteController::class,'negotitator_list']);
     // });
-    
+
     // Route::group(['prefix' => 'negotiator'], function () {
 	//     Route::resource('bid',App\Http\Controllers\Api\Negotiator\BidController::class);
 	//     Route::get('bid_help',[App\Http\Controllers\Api\Negotiator\BidController::class,'bid_help_list']);
@@ -112,21 +112,21 @@ Route::group(['middleware' => ['api','auth:api'], 'prefix' => 'auth'], function 
 	//     Route::post('coverphoto_update',[App\Http\Controllers\Api\UserController::class,'negotiator_coverphoto_update']);
     // });
 
-    // Route::get('notification', [\App\Http\Controllers\Api\UserController::class, 'un_reead_notification']); 
+    // Route::get('notification', [\App\Http\Controllers\Api\UserController::class, 'un_reead_notification']);
     // Route::post('/notification',[\App\Http\Controllers\Api\UserController::class,'read_notification']);
     // Route::post('/checkout', [App\Http\Controllers\Api\OrderController::class, 'store']);
-    // Route::get('shipping', [\App\Http\Controllers\Api\ShippingController::class, 'index']); 
-    // Route::get('category', [\App\Http\Controllers\Api\CategoryController::class, 'index']); 
-    // Route::get('brand', [\App\Http\Controllers\Api\BrandController::class, 'index']); 
-    // Route::get('product', [\App\Http\Controllers\Api\ProductController::class, 'index']); 
-    // Route::get('product/{brand}', [\App\Http\Controllers\Api\ProductController::class, 'brand_product']); 
+    // Route::get('shipping', [\App\Http\Controllers\Api\ShippingController::class, 'index']);
+    // Route::get('category', [\App\Http\Controllers\Api\CategoryController::class, 'index']);
+    // Route::get('brand', [\App\Http\Controllers\Api\BrandController::class, 'index']);
+    // Route::get('product', [\App\Http\Controllers\Api\ProductController::class, 'index']);
+    // Route::get('product/{brand}', [\App\Http\Controllers\Api\ProductController::class, 'brand_product']);
 	// Route::resource('cart',App\Http\Controllers\Api\CartController::class);
-	
+
 	// Route::resource('trophy',App\Http\Controllers\Api\TrophyController::class);
-    // Route::post('set_goal', [\App\Http\Controllers\Api\GoalController::class, 'set_goal']); 
-    // Route::get('goal/list', [\App\Http\Controllers\Api\GoalController::class, 'list']); 
+    // Route::post('set_goal', [\App\Http\Controllers\Api\GoalController::class, 'set_goal']);
+    // Route::get('goal/list', [\App\Http\Controllers\Api\GoalController::class, 'list']);
     // Route::post('addcard', [\App\Http\Controllers\UserCardController::class, 'addcard']);
-	// Route::post('updatecard', [\App\Http\Controllers\UserCardController::class, 'updatecard']); 
+	// Route::post('updatecard', [\App\Http\Controllers\UserCardController::class, 'updatecard']);
     // Route::get('me', [\App\Http\Controllers\Api\RegisterController::class, 'me']);
     // Route::get('orders', [\App\Http\Controllers\Api\OrderController::class, 'orders']);
     // Route::get('children_orders', [\App\Http\Controllers\Api\OrderController::class, 'childorders']);
@@ -134,11 +134,11 @@ Route::group(['middleware' => ['api','auth:api'], 'prefix' => 'auth'], function 
     // Route::get('transaction', [\App\Http\Controllers\TranasactionController::class, 'index']);
     // Route::post('withdraw', [\App\Http\Controllers\TranasactionController::class, 'store']);
     // Route::get('withdraw/list', [\App\Http\Controllers\TranasactionController::class, 'index']);
-    Route::post('change_password', [\App\Http\Controllers\Api\RegisterController::class, 'change_password']); 
-	// Route::post('cuurent/plan', [\App\Http\Controllers\Api\UserController::class, 'current_plan']);  	
+    Route::post('change_password', [\App\Http\Controllers\Api\RegisterController::class, 'change_password']);
+	// Route::post('cuurent/plan', [\App\Http\Controllers\Api\UserController::class, 'current_plan']);
     // Route::get('financial/breakdowns/{date}', [\App\Http\Controllers\Api\FinancialController::class, 'financialdata']);
     // Route::post('financial/breakdowns/post', [\App\Http\Controllers\Api\FinancialController::class, 'financialpost']);
-    Route::get('admin/info', [\App\Http\Controllers\Api\ContactController::class, 'admininfo']);
-    Route::post('contact/submit', [\App\Http\Controllers\Api\ContactController::class, 'contact_info']);
+    // Route::get('admin/info', [\App\Http\Controllers\Api\ContactController::class, 'admininfo']);
+    // Route::post('contact/submit', [\App\Http\Controllers\Api\ContactController::class, 'contact_info']);
     Route::get('logout', [\App\Http\Controllers\Api\RegisterController::class, 'logout']);
 });

@@ -16,8 +16,8 @@ use App\Http\Controllers\PaypalController;
 |
 */
 
-Route::get('payment-paypal', [PaypalController::class,'postPaymentWithpaypal'])->name('payment-paypal')->middleware('auth');
-Route::get('status', [PaypalController::class,'getPaymentStatus'])->name('status')->middleware('auth');
+// Route::get('payment-paypal', [PaypalController::class,'postPaymentWithpaypal'])->name('payment-paypal')->middleware('auth');
+// Route::get('status', [PaypalController::class,'getPaymentStatus'])->name('status')->middleware('auth');
 
 Route::get('/product-grids',[FrontendController::class,'productGrids'])->name('product-grids');
 
@@ -36,8 +36,8 @@ Route::get('vendor/login',[LoginController::class,'vendor_login'])->name('vendor
 Route::post('vendor/login',[LoginController::class,'vendor_login_submit'])->name('vendor.login');
 Route::post('vendor/register',[FrontendController::class,'vendorregisterSubmit'])->name('vendor_register.submit');
 // Reset password
-// Route::post('password-reset', [FrontendController::class,'showResetForm'])->name('password.reset'); 
-// Socialite 
+// Route::post('password-reset', [FrontendController::class,'showResetForm'])->name('password.reset');
+// Socialite
 Route::get('login/{provider}/', [\App\Http\Controllers\Auth\LoginController::class,'redirect'])->name('login.redirect');
 Route::get('login/{provider}/callback/', [\App\Http\Controllers\Auth\LoginController::class,'Callback'])->name('login.callback');
 
@@ -56,7 +56,7 @@ Route::get('/postage-label-terms',[FrontendController::class,'postage_label_term
 Route::get('/FAQ',[FrontendController::class,'faqs'])->name('FAQ');
 Route::get('/contact',[FrontendController::class,'contact'])->name('contact');
 Route::post('/productqa/store',[FrontendController::class,'product_qa_store'])->name('productqa.store');
-Route::post('/contact/message',[\App\Http\Controllers\MessageController::class,'store'])->name('contact.store');
+// Route::post('/contact/message',[\App\Http\Controllers\MessageController::class,'store'])->name('contact.store');
 Route::get('product-detail/{slug}',[FrontendController::class,'productDetail'])->name('product-detail');
 Route::get('/product-review-fetch/{slug}/{id}',[FrontendController::class,'product_review_fetch'])->name('product-review-fetch');
 Route::post('/product/search',[FrontendController::class,'productSearch'])->name('product.search');
@@ -64,30 +64,30 @@ Route::get('/product-cat/{slug}',[FrontendController::class,'productCat'])->name
 Route::get('/product-sub-cat/{slug}',[FrontendController::class,'productSubCat'])->name('product-sub-cat');
 Route::get('/product-brand/{slug}',[FrontendController::class,'productBrand'])->name('product-brand');
 // Cart section
-Route::get('/add-to-cart/{slug}',[\App\Http\Controllers\CartController::class,'addToCart'])->name('add-to-cart')->middleware('user');
-Route::post('/add-to-cart',[\App\Http\Controllers\CartController::class,'singleAddToCart'])->name('single-add-to-cart')->middleware('user');
-Route::get('cart-delete/{id}',[\App\Http\Controllers\CartController::class,'cartDelete'])->name('cart-delete');
-Route::post('cart-update',[\App\Http\Controllers\CartController::class,'cartUpdate'])->name('cart.update');
+// Route::get('/add-to-cart/{slug}',[\App\Http\Controllers\CartController::class,'addToCart'])->name('add-to-cart')->middleware('user');
+// Route::post('/add-to-cart',[\App\Http\Controllers\CartController::class,'singleAddToCart'])->name('single-add-to-cart')->middleware('user');
+// Route::get('cart-delete/{id}',[\App\Http\Controllers\CartController::class,'cartDelete'])->name('cart-delete');
+// Route::post('cart-update',[\App\Http\Controllers\CartController::class,'cartUpdate'])->name('cart.update');
 
 Route::get('/cart',function(){
     return view('frontend.pages.cart');
 })->name('cart');
-Route::get('/checkout',[\App\Http\Controllers\CartController::class,'checkout'])->name('checkout')->middleware('user');
+// Route::get('/checkout',[\App\Http\Controllers\CartController::class,'checkout'])->name('checkout')->middleware('user');
 // Wishlist
 Route::get('/wishlist',function(){
     return view('frontend.pages.wishlist');
 })->name('wishlist');
-Route::get('/wishlist/{slug}',[\App\Http\Controllers\WishlistController::class,'wishlist'])->name('add-to-wishlist')->middleware('user');
-Route::get('wishlist-delete/{id}',[\App\Http\Controllers\WishlistController::class,'wishlistDelete'])->name('wishlist-delete');
-Route::post('cart/order',[\App\Http\Controllers\OrderController::class,'store'])->name('cart.order');
-Route::get('order/pdf/{id}',[\App\Http\Controllers\OrdersController::class,'pdf'])->name('order.pdf');
-Route::get('/income',[\App\Http\Controllers\OrdersController::class,'incomeChart'])->name('product.order.income');
+// Route::get('/wishlist/{slug}',[\App\Http\Controllers\WishlistController::class,'wishlist'])->name('add-to-wishlist')->middleware('user');
+// Route::get('wishlist-delete/{id}',[\App\Http\Controllers\WishlistController::class,'wishlistDelete'])->name('wishlist-delete');
+// Route::post('cart/order',[\App\Http\Controllers\OrderController::class,'store'])->name('cart.order');
+// Route::get('order/pdf/{id}',[\App\Http\Controllers\OrdersController::class,'pdf'])->name('order.pdf');
+// Route::get('/income',[\App\Http\Controllers\OrdersController::class,'incomeChart'])->name('product.order.income');
 // Route::get('/user/chart',[\App\Http\Controllers\AdminController::class,'userPieChart'])->name('user.piechart');
 Route::get('/product-lists',[FrontendController::class,'productLists'])->name('product-lists');
 Route::match(['get','post'],'/filter',[FrontendController::class,'productFilter'])->name('shop.filter');
 // Order Track
-Route::get('/product/track',[\App\Http\Controllers\OrderController::class,'orderTrack'])->name('order.track');
-Route::post('product/track/order',[\App\Http\Controllers\OrderController::class,'productTrackOrder'])->name('product.track.order');
+// Route::get('/product/track',[\App\Http\Controllers\OrderController::class,'orderTrack'])->name('order.track');
+// Route::post('product/track/order',[\App\Http\Controllers\OrderController::class,'productTrackOrder'])->name('product.track.order');
 // Blog
 Route::get('/blog',[FrontendController::class,'blog'])->name('blog');
 Route::get('/blog-detail/{slug}',[FrontendController::class,'blogDetail'])->name('blog.detail');
@@ -104,15 +104,15 @@ Route::resource('/review',\App\Http\Controllers\ProductReviewController::class);
 // Route::post('product/{slug}/review',[\App\Http\Controllers\ProductReviewController::class,'store'])->name('review.store');
 Route::post('vendor/{slug}/review',[\App\Http\Controllers\ProductReviewController::class,'vendor_store'])->name('vendor_review.store');
 
-// Post Comment 
+// Post Comment
 Route::post('post/{slug}/comment',[\App\Http\Controllers\PostCommentController::class,'store'])->name('post-comment.store');
 Route::resource('/comment',\App\Http\Controllers\PostCommentController::class);
 // Coupon
 Route::post('/coupon-store',[\App\Http\Controllers\CouponController::class,'couponStore'])->name('coupon-store');
 // Payment
-Route::get('payment', [\App\Http\Controllers\PayPalController::class,'payment'])->name('payment');
-Route::get('cancel', [\App\Http\Controllers\PayPalController::class,'cancel'])->name('payment.cancel');
-Route::get('payment/success', [\App\Http\Controllers\PayPalController::class,'success'])->name('payment.success');
+// Route::get('payment', [\App\Http\Controllers\PayPalController::class,'payment'])->name('payment');
+// Route::get('cancel', [\App\Http\Controllers\PayPalController::class,'cancel'])->name('payment.cancel');
+// Route::get('payment/success', [\App\Http\Controllers\PayPalController::class,'success'])->name('payment.success');
 
 
 
@@ -120,7 +120,7 @@ Route::get('payment/success', [\App\Http\Controllers\PayPalController::class,'su
 
 Route::group(['prefix'=>'admin','middleware'=>['auth','admin']],function(){
     Route::get('/dashboard',[\App\Http\Controllers\AdminController::class,'index'])->name('admin.dashboard');
-    
+
     Route::get('/donations', [App\Http\Controllers\AdminController::class,'donations'])->name('donations.index');
 
     // user route
@@ -147,8 +147,8 @@ Route::group(['prefix'=>'admin','middleware'=>['auth','admin']],function(){
     // Post
     Route::resource('/post',\App\Http\Controllers\PostController::class);
     // Message
-    Route::resource('/message',\App\Http\Controllers\MessageController::class);
-    Route::get('/message/five',[\App\Http\Controllers\MessageController::class,'messageFive'])->name('messages.five');
+    // Route::resource('/message',\App\Http\Controllers\MessageController::class);
+    // Route::get('/message/five',[\App\Http\Controllers\MessageController::class,'messageFive'])->name('messages.five');
 
     // Order
     Route::resource('/order',\App\Http\Controllers\OrdersController::class);
@@ -195,28 +195,28 @@ Route::group(['prefix'=>'admin','middleware'=>['auth','admin']],function(){
 // User section start
 Route::group(['prefix'=>'/user','middleware'=>['auth','user']],function(){
     Route::get('/dashboard',[\App\Http\Controllers\HomeController::class,'index'])->name('user');
-    
+
     // Profile
      Route::get('/profile',[\App\Http\Controllers\HomeController::class,'profile'])->name('user-profile');
      Route::post('/profile/{id}',[\App\Http\Controllers\HomeController::class,'profileUpdate'])->name('user-profile-update');
-    
+
      //  Order
     Route::get('/order',[\App\Http\Controllers\HomeController::class,'orderIndex'])->name('user.order.index');
     Route::get('/order/show/{id}',[\App\Http\Controllers\HomeController::class,"orderShow"])->name('user.order.show');
     Route::delete('/order/delete/{id}',[\App\Http\Controllers\HomeController::class,'userOrderDelete'])->name('user.order.delete');
-    
+
     // Product Review
     Route::get('/user-review',[\App\Http\Controllers\HomeController::class,'productReviewIndex'])->name('user.productreview.index');
     Route::delete('/user-review/delete/{id}',[\App\Http\Controllers\HomeController::class,'productReviewDelete'])->name('user.productreview.delete');
     Route::get('/user-review/edit/{id}',[\App\Http\Controllers\HomeController::class,'productReviewEdit'])->name('user.productreview.edit');
     Route::patch('/user-review/update/{id}',[\App\Http\Controllers\HomeController::class,'productReviewUpdate'])->name('user.productreview.update');
-    
+
     // Post comment
     Route::get('user-post/comment',[\App\Http\Controllers\HomeController::class,'userComment'])->name('user.post-comment.index');
     Route::delete('user-post/comment/delete/{id}',[\App\Http\Controllers\HomeController::class,'userCommentDelete'])->name('user.post-comment.delete');
     Route::get('user-post/comment/edit/{id}',[\App\Http\Controllers\HomeController::class,'userCommentEdit'])->name('user.post-comment.edit');
     Route::patch('user-post/comment/udpate/{id}',[\App\Http\Controllers\HomeController::class,'userCommentUpdate'])->name('user.post-comment.update');
-    
+
     // Password Change
     // Route::get('change-password', [\App\Http\Controllers\HomeController::class,'changePassword'])->name('user.change.password.form');
     // Route::post('change-password', [\App\Http\Controllers\HomeController::class,'changPasswordStore'])->name('change.password');

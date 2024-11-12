@@ -11,6 +11,7 @@ use App\Models\PostTag;
 use App\Models\PostLocation;
 use App\Models\PostLike;
 use Auth;
+use Log;
 
 use Illuminate\Support\Facades\Validator;
 
@@ -104,6 +105,7 @@ class PostController extends BaseController
      */
     public function store(Request $request)
     {
+        // Log::info($request->all());
         try
         {
             $validated = \Validator::make($request->all(),[
@@ -120,6 +122,7 @@ class PostController extends BaseController
             // Start the transaction to create the post
             // \DB::beginTransaction();
             if($validated->fails()) {
+                Log::info($validated->errors());
                 return $this->sendError($validated->errors()->first());
             }
 
@@ -141,12 +144,14 @@ class PostController extends BaseController
                     ]);
                 }
             }
-
             // Handle images
             if ($request->hasFile('images')) {
-                foreach ($request->file('images') as $image) {
+                foreach ($request->images as $image) {
+                    // Log::info($image);
+                    // Log::info('File MIME Type: ' . $image->getMimeType());
+
                     $type = $image->getClientOriginalExtension();
-                    $filetype = ($type == 'mp4') ? 'video' : 'image' ;
+                    $filetype =  $image->getMimeType() ;
                     $imageUrl = $image->store('posts/images', 'public');
                     PostImage::create([
                         'post_id' => $post->id,
