@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Api\BaseController as BaseController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Comment;
+use Validator;
+use Auth;
 
-class CommentController extends Controller
+class CommentController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -40,7 +43,7 @@ class CommentController extends Controller
             $validator = Validator::make($request->all(), [
                 'post_id' => 'required|exists:posts,id',
                 'description' => 'required|string',
-            ]); 
+            ]);
             if($validator->fails())
             {
                 return $this->sendError($validator->errors()->first(),500);
