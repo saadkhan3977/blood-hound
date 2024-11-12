@@ -26,9 +26,13 @@ class PostController extends BaseController
     {
         try
         {
+            $type = ($request->type == 'image') ? 'image' : 'video';
             $userid = Auth::id();
-            $post = Post::withCount('like','comment')->with(['comment','images','locations','tags','my_like'=> function($query) use ($userid) {
+            $post = Post::withCount('like','comment')->with(['comment','locations','tags','my_like'=> function($query) use ($userid) {
                 $query->where('user_id', $userid);
+            },
+            'images'=> function($query) use ($userid) {
+                $query->where('type',$type);
             }])->where('user_id',Auth::id())->get();
             return response()->json(['message' => 'Post Lists','post_list'=>$post], 201);
         }
@@ -44,7 +48,7 @@ class PostController extends BaseController
         {
             $type = ($request->type == 'image') ? 'image' : 'video';
             $postids = Post::where('user_id',Auth::id())->get()->pluck('id');
-            $gallery = PostImage::whereIn('post_id',$postids)->where('type', 'like', $type)->get();
+            $gallery = PostImage::whereIn('post_id',$postids)->where('type',$type)->get();
             return response()->json(['message' => 'Gallery Lists','gallery_list'=>$gallery], 201);
         }
         catch (\Exception $e)
