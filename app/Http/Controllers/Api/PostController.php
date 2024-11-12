@@ -30,13 +30,13 @@ class PostController extends BaseController
                 $query->where('user_id', $userid);
             }])->where('user_id',Auth::id())->get();
             return response()->json(['message' => 'Post Lists','post_list'=>$post], 201);
-        } 
-        catch (\Exception $e) 
+        }
+        catch (\Exception $e)
         {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    
+
     public function gallery(Request $request)
     {
         try
@@ -45,8 +45,8 @@ class PostController extends BaseController
             $postids = Post::where('user_id',Auth::id())->get()->pluck('id');
             $gallery = PostImage::whereIn('post_id',$postids)->where('type',$file)->get();
             return response()->json(['message' => 'Gallery Lists','gallery_list'=>$gallery], 201);
-        } 
-        catch (\Exception $e) 
+        }
+        catch (\Exception $e)
         {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -59,14 +59,14 @@ class PostController extends BaseController
              $validator = Validator::make($request->all(), [
                  'post_id' => 'required|exists:posts,id',
                 //  'profile_id' => 'required',
-             ]);  
-             
-             
+             ]);
+
+
              if($validator->fails())
              {
                  return $this->sendError($validator->errors()->first());
              }
- 
+
             $input['user_id'] = Auth::id();
             $input['post_id'] = $request->post_id;
             $data = PostLike::where(['user_id'=>Auth::id(),'post_id' => $request->post_id])->first();
@@ -82,7 +82,7 @@ class PostController extends BaseController
             }
         }
         catch(\Eception $e){
-            return $this->sendError($e->getMessage());    
+            return $this->sendError($e->getMessage());
         }
     }
 
@@ -104,7 +104,7 @@ class PostController extends BaseController
      */
     public function store(Request $request)
     {
-        try 
+        try
         {
             $validated = \Validator::make($request->all(),[
                 'description' => 'required|string',
@@ -146,7 +146,7 @@ class PostController extends BaseController
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $image) {
                     $type = $image->getClientOriginalExtension();
-                    $filetype = ($type == 'video/mp4') ? 'video' : 'image' ;
+                    $filetype = ($image->mediaType == 'image') ? 'image' : 'video' ;
                     $imageUrl = $image->store('posts/images', 'public');
                     PostImage::create([
                         'post_id' => $post->id,
@@ -156,7 +156,7 @@ class PostController extends BaseController
                 }
             }
 
-            
+
 
             // Attach tags
             if ($request->has('tags')) {
@@ -173,7 +173,7 @@ class PostController extends BaseController
             // \DB::commit();
 
             return response()->json(['message' => 'Post created successfully'], 201);
-        } 
+        }
         catch (\Exception $e) {
             \DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 500);
