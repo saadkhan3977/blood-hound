@@ -26,14 +26,11 @@ class PostController extends BaseController
     {
         try
         {
-            $type = ($request->type == 'image') ? 'image' : 'video';
+            $category = $request->category;
             $userid = Auth::id();
             $post = Post::withCount('like','comment')->with(['comment','locations','tags','my_like'=> function($query) use ($userid) {
                 $query->where('user_id', $userid);
-            },
-            'images'=> function($query) use ($type) {
-                $query->where('type',$type);
-            }])->where('user_id',Auth::id())->get();
+            }])->where('category',$category)->where('user_id',Auth::id())->get();
             return response()->json(['message' => 'Post Lists','post_list'=>$post], 201);
         }
         catch (\Exception $e)
