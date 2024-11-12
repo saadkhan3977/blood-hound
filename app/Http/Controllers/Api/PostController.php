@@ -22,7 +22,7 @@ class PostController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try
         {
@@ -42,7 +42,7 @@ class PostController extends BaseController
     {
         try
         {
-            $type = ($request->type == 'image') ? 'image/%' : 'video/%';
+            $type = ($request->type == 'image') ? 'image' : 'video';
             $postids = Post::where('user_id',Auth::id())->get()->pluck('id');
             $gallery = PostImage::whereIn('post_id',$postids)->where('type', 'like', $type)->get();
             return response()->json(['message' => 'Gallery Lists','gallery_list'=>$gallery], 201);
@@ -151,12 +151,12 @@ class PostController extends BaseController
                     // Log::info('File MIME Type: ' . $image->getMimeType());
 
                     $type = $image->getClientOriginalExtension();
-                    $filetype =  $image->getMimeType() ;
+                    $filetype =  $image->getMimeType();
                     $imageUrl = $image->store('posts/images', 'public');
                     PostImage::create([
                         'post_id' => $post->id,
                         'file' => $imageUrl,
-                        'type' => $filetype,
+                        'type' => ($filetype == 'video/mp4') ? 'video' : 'image',
                     ]);
                 }
             }
