@@ -143,41 +143,17 @@ class PostController extends BaseController
             }
 
             // Handle images
-            // if ($request->hasFile('images')) {
-            //     foreach ($request->file('images') as $image) {
-            //         $type = $image->getClientOriginalExtension();
-            //         $filetype = ($image->mediaType == 'image') ? 'image' : 'video' ;
-            //         $imageUrl = $image->store('posts/images', 'public');
-            //         PostImage::create([
-            //             'post_id' => $post->id,
-            //             'file' => $imageUrl,
-            //             'type' => $filetype,
-            //         ]);
-            //     }
-            // }
-
-            $images = $request->file('images');
-            $fileData = [];
-
-            foreach ($images as $index => $image) {
-                $fileType = $image->getClientMimeType();
-
-                // Store file and save metadata
-                // $path = $image->store('uploads');
-                $imageUrl = $image->store('posts/images', 'public');
-
-
-                PostImage::create([
-                    'post_id' => $post->id,
-                    'file' => $imageUrl,
-                    'type' => $fileType, // 'video' or 'image'
-                ]);
-                // $fileData[] = [
-                //     'path' => $path,
-                //     'type' => $image->getClientMimeType(),
-                //     'media_type' => $mediaType, // 'video' or 'image'
-                //     'name' => $image->getClientOriginalName(),
-                // ];
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    $type = $image->getClientOriginalExtension();
+                    $filetype = ($type == 'mp4') ? 'video' : 'image' ;
+                    $imageUrl = $image->store('posts/images', 'public');
+                    PostImage::create([
+                        'post_id' => $post->id,
+                        'file' => $imageUrl,
+                        'type' => $filetype,
+                    ]);
+                }
             }
 
 
