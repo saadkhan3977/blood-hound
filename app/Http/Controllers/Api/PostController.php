@@ -160,7 +160,7 @@ class PostController extends BaseController
             $fileData = [];
 
             foreach ($images as $index => $image) {
-                $mediaType = $request->input("images[$index].mediaType");
+                $fileType = $image->getClientMimeType();
 
                 // Store file and save metadata
                 // $path = $image->store('uploads');
@@ -170,7 +170,7 @@ class PostController extends BaseController
                 PostImage::create([
                     'post_id' => $post->id,
                     'file' => $imageUrl,
-                    'type' => $mediaType, // 'video' or 'image'
+                    'type' => $fileType, // 'video' or 'image'
                 ]);
                 // $fileData[] = [
                 //     'path' => $path,
