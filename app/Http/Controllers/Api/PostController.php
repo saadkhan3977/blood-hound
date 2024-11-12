@@ -109,7 +109,6 @@ class PostController extends BaseController
      */
     public function store(Request $request)
     {
-        // Log::info($request->all());
         try
         {
             $validated = \Validator::make($request->all(),[
@@ -121,6 +120,7 @@ class PostController extends BaseController
                 'location' => 'required|array',
                 'tags' => 'required|array',
                 'tags.*' => 'exists:users,id',
+                'images.*' => 'file|mimes:mp4,jpeg,png',
             ]);
 
             // Start the transaction to create the post
