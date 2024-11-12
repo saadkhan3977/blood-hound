@@ -42,9 +42,9 @@ class PostController extends BaseController
     {
         try
         {
-            $file = ($request->type == 'image') ? 'image' : 'video';
+            $type = ($request->type == 'image') ? 'image/%' : 'video/%';
             $postids = Post::where('user_id',Auth::id())->get()->pluck('id');
-            $gallery = PostImage::whereIn('post_id',$postids)->where('type',$file)->get();
+            $gallery = PostImage::whereIn('post_id',$postids)->where('type', 'like', $type)->get();
             return response()->json(['message' => 'Gallery Lists','gallery_list'=>$gallery], 201);
         }
         catch (\Exception $e)
