@@ -115,6 +115,9 @@ class PostController extends BaseController
                 'end_time' => 'required',
                 'category' => 'required|string',
                 'location' => 'required|array',
+                'location.*.name' => 'required|string',
+                'location.*.lat' => 'required|numeric',
+                'location.*.lng' => 'required|numeric',
                 'tags' => 'array',
                 'tags.*' => 'exists:users,id',
                 'images.*' => 'file|mimes:mp4,jpeg,png',
@@ -142,10 +145,10 @@ class PostController extends BaseController
             if ($request->has('location')) {
                 foreach ($request->location as $location) {
                     PostLocation::create([
-                        'post_id' => $post->id,  // Associate the tag with the created post
-                        'name' => $location['name'],  // Store the tag name directly
-                        'lat' => $location['lat'],  // Store the tag name directly
-                        'lng' => $location['lng'],  // Store the tag name directly
+                        'post_id' => $post->id,
+                        'name' => $location->name,
+                        'lat' => $location->lat,
+                        'lng' => $location->lng,
                     ]);
                 }
             }
