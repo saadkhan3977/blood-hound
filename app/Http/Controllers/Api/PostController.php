@@ -115,7 +115,7 @@ class PostController extends BaseController
                 'end_time' => 'required',
                 'category' => 'required|string',
                 'location' => 'required|array',
-                'location.*.name' => 'required|string',
+                'location.*.name' => 'required|array',
                 'location.*.lat' => 'required|numeric',
                 'location.*.lng' => 'required|numeric',
                 'tags' => 'array',
