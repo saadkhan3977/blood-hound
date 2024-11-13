@@ -139,7 +139,9 @@ class PostController extends BaseController
                 foreach ($request->location as $location) {
                     PostLocation::create([
                         'post_id' => $post->id,  // Associate the tag with the created post
-                        'location' => $location,  // Store the tag name directly
+                        'name' => $location->name,  // Store the tag name directly
+                        'lat' => $location->lat,  // Store the tag name directly
+                        'lng' => $location->lng,  // Store the tag name directly
                     ]);
                 }
             }
