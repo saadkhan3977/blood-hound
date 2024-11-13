@@ -104,31 +104,33 @@ class PostController extends BaseController
      */
     public function store(Request $request)
     {
+        Log::info($request->all());
+
+    // return $request->all();
+    // print_r('saad' );die;
+        $validated = \Validator::make($request->all(),[
+            'description' => 'required|string',
+            'privacy' => 'required',
+            'start_time' => 'required',
+            'assetname' => 'required',
+            'assetcolor' => 'required',
+            'end_time' => 'required',
+            'category' => 'required|string',
+            'location' => 'array',
+            'location.*.name' => 'string',
+            'location.*.lat' => 'numeric',
+            'location.*.lng' => 'numeric',
+            'tags' => 'array',
+            'tags.*' => 'exists:users,id',
+            'images.*' => 'file|mimes:mp4,jpeg,png',
+        ]);
+
+        if($validated->fails()) {
+            // Log::info($validated->errors());
+            return $this->sendError($validated->errors()->first());
+        }
         try
         {
-        // return $request->all();die;
-        // print_r('saad' );die;
-            $validated = \Validator::make($request->all(),[
-                'description' => 'required|string',
-                'privacy' => 'required',
-                'start_time' => 'required',
-                'assetname' => 'required',
-                'assetcolor' => 'required',
-                'end_time' => 'required',
-                'category' => 'required|string',
-                'location' => 'array',
-                'location.*.name' => 'string',
-                'location.*.lat' => 'numeric',
-                'location.*.lng' => 'numeric',
-                'tags' => 'array',
-                'tags.*' => 'exists:users,id',
-                'images.*' => 'file|mimes:mp4,jpeg,png',
-            ]);
-
-            if($validated->fails()) {
-                Log::info($validated->errors());
-                return $this->sendError($validated->errors()->first());
-            }
 
             // Create the post
             $post = Post::create([
@@ -146,9 +148,9 @@ class PostController extends BaseController
                 foreach ($request->location as $location) {
                     PostLocation::create([
                         'post_id' => $post->id,
-                        'name' => $location->name,  // Use the 'location' directly from the array
-                        'lat' => $location->lat,
-                        'lng' => $location->lng  // Make sure to use 'lng' here instead of 'name'
+                        'name' => $location['name'],  // Use the 'location' directly from the array
+                        'lat' => $location['lat'],
+                        'lng' => $location['lng']  // Make sure to use 'lng' here instead of 'name'
                     ]);
                 }
             }
