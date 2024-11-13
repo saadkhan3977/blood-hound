@@ -28,7 +28,7 @@ class PostController extends BaseController
         {
             $category = $request->category;
             $userid = Auth::id();
-            $post = Post::withCount('like','comment')->with(['comment','locations','tags','my_like'=> function($query) use ($userid) {
+            $post = Post::withCount('like','comment')->with(['images','comment','locations','tags','my_like'=> function($query) use ($userid) {
                 $query->where('user_id', $userid);
             }])->where('category',$category)->where('user_id',Auth::id())->get();
             return response()->json(['message' => 'Post Lists','post_list'=>$post], 201);
@@ -60,9 +60,7 @@ class PostController extends BaseController
          {
              $validator = Validator::make($request->all(), [
                  'post_id' => 'required|exists:posts,id',
-                //  'profile_id' => 'required',
              ]);
-
 
              if($validator->fails())
              {

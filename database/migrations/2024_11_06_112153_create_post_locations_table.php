@@ -16,7 +16,9 @@ return new class extends Migration
         Schema::create('post_locations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('post_id')->nullable();
-            $table->text('location')->nullable();
+            $table->text('name')->nullable();
+            $table->text('lat')->nullable();
+            $table->text('lng')->nullable();
             $table->timestamps();
             $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
         });
