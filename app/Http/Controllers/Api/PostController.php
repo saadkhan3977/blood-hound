@@ -104,6 +104,9 @@ class PostController extends BaseController
      */
     public function store(Request $request)
     {
+
+        return $request->all();die;
+        // print_r('saad' );die;
             $validated = \Validator::make($request->all(),[
                 'description' => 'required|string',
                 'privacy' => 'required',
