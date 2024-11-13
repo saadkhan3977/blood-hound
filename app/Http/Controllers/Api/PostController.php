@@ -115,7 +115,7 @@ class PostController extends BaseController
                 'end_time' => 'required',
                 'category' => 'required|string',
                 'location' => 'required|array',
-                'location.*.name' => 'required|array',
+                'location.*.name' => 'required|string',
                 'location.*.lat' => 'required|numeric',
                 'location.*.lng' => 'required|numeric',
                 'tags' => 'array',
@@ -143,12 +143,14 @@ class PostController extends BaseController
             ]);
 
             if ($request->has('location')) {
-                foreach ($request->location as $location) {
+                foreach ($request->location as $key => $location) {
                     PostLocation::create([
                         'post_id' => $post->id,
-                        'name' => $location->name,
-                        'lat' => $location->lat,
-                        'lng' => $location->lng,
+                        'name' => $request->location[$key]['name'],
+                        'lat' => $request->location[$key]['lat'],
+                        'lng' => $request->location[$key]['lng'],
+                        // 'lat' => $location->lat,
+                        // 'lng' => $location->lng,
                     ]);
                 }
             }
