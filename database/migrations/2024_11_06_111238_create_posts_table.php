@@ -19,6 +19,8 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('privacy')->nullable();
             $table->string('category')->nullable();
+            $table->string('assetname')->nullable();
+            $table->string('assetcolor')->nullable();
             $table->string('start_time')->nullable();
             $table->string('end_time')->nullable();
             $table->timestamps();

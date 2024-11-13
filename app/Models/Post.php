@@ -37,9 +37,14 @@ class Post extends Model
     {
         return $this->hasMany(PostLike::class);
     }
-    
+
+    // public function comment()
+    // {
+    //     return $this->hasMany(Comment::class);
+    // }
+
     public function comment()
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class)->whereNull('parent_id'); // Only top-level comments
     }
 }

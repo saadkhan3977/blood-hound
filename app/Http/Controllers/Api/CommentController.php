@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Comment;
 use Validator;
 use Auth;
+use App\Models\CommentLike;
 
 class CommentController extends BaseController
 {
@@ -59,6 +60,68 @@ class CommentController extends BaseController
             return $this->sendError($e->getMessage());
 
         }
+    }
+
+    // Method to add a reply to a comment
+    public function addReply(Request $request, $commentId)
+    {
+
+        $validator = Validator::make($request->all(), [
+            // 'post_id' => 'required|exists:posts,id',
+            'description' => 'required|string',
+        ]);
+
+        if($validator->fails())
+        {
+            return $this->sendError($validator->errors()->first(),500);
+        }
+
+        $parentComment = Comment::findOrFail($commentId);
+
+        $reply = Comment::create([
+            'post_id' => $parentComment->post_id,
+            'user_id' => auth()->id(),
+            'description' => $request->description,
+            'parent_id' => $parentComment->id,
+        ]);
+
+        return response()->json(['message' => 'Reply added successfully', 'reply' => $reply], 201);
+    }
+
+
+    public function likeComment($commentId)
+    {
+        $comment = Comment::findOrFail($commentId);
+        $userId = auth()->id();
+
+        // Check if the comment is already liked by the user
+        if ($comment->isLikedBy($userId)) {
+            return response()->json(['message' => 'Already liked'], 400);
+        }
+
+        CommentLike::create([
+            'comment_id' => $commentId,
+            'user_id' => $userId,
+        ]);
+
+        return response()->json(['message' => 'Comment liked successfully']);
+    }
+
+    // Method to unlike a comment
+    public function unlikeComment($commentId)
+    {
+        $comment = Comment::findOrFail($commentId);
+        $userId = auth()->id();
+
+        // Find the like record and delete it
+        $like = CommentLike::where('comment_id', $commentId)->where('user_id', $userId)->first();
+
+        if ($like) {
+            $like->delete();
+            return response()->json(['message' => 'Comment unliked successfully']);
+        }
+
+        return response()->json(['message' => 'Like not found'], 404);
     }
 
     /**

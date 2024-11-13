@@ -17,10 +17,12 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('post_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->text('description')->nullable();            
+            $table->text('description')->nullable();
+            $table->foreignId('parent_id')->nullable()->constrained('comments')->onDelete('cascade'); // Reference for replies
             $table->timestamps();
             $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
         });
     }
 

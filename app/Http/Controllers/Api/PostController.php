@@ -28,7 +28,7 @@ class PostController extends BaseController
         {
             $category = $request->category;
             $userid = Auth::id();
-            $post = Post::withCount('like','comment')->with(['images','comment','comment.user_info','locations','tags','my_like'=> function($query) use ($userid) {
+            $post = Post::withCount('like','comment')->with(['images','comment.replies.user','locations','tags','my_like'=> function($query) use ($userid) {
                 $query->where('user_id', $userid);
             }])->where('category',$category)->where('user_id',Auth::id())->get();
             return response()->json(['message' => 'Post Lists','post_list'=>$post], 201);
@@ -110,10 +110,12 @@ class PostController extends BaseController
                 'description' => 'required|string',
                 'privacy' => 'required',
                 'start_time' => 'required',
+                'assetname' => 'required',
+                'assetcolor' => 'required',
                 'end_time' => 'required',
                 'category' => 'required|string',
                 'location' => 'required|array',
-                'tags' => 'required|array',
+                'tags' => 'array',
                 'tags.*' => 'exists:users,id',
                 'images.*' => 'file|mimes:mp4,jpeg,png',
             ]);
@@ -130,6 +132,8 @@ class PostController extends BaseController
                 'user_id' => \Auth::user()->id,
                 'description' => $request->description,
                 'privacy' => $request->privacy,
+                'assetcolor' => $request->assetcolor,
+                'assetname' => $request->assetname,
                 'category' => $request->category,
                 'start_time' => $request->start_time,
                 'end_time' => $request->end_time,
