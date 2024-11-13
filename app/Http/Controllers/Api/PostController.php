@@ -122,6 +122,7 @@ class PostController extends BaseController
             ]);
 
             if($validated->fails()) {
+                Log::info($validated->errors());
                 return $this->sendError($validated->errors()->first());
             }
 
