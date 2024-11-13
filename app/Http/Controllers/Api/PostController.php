@@ -104,7 +104,8 @@ class PostController extends BaseController
      */
     public function store(Request $request)
     {
-
+        try
+        {
         // return $request->all();die;
         // print_r('saad' );die;
             $validated = \Validator::make($request->all(),[
@@ -145,9 +146,9 @@ class PostController extends BaseController
                 foreach ($request->location as $location) {
                     PostLocation::create([
                         'post_id' => $post->id,
-                        'name' => $location['name'],  // Use the 'location' directly from the array
-                        'lat' => $location['lat'],
-                        'lng' => $location['lng'],  // Make sure to use 'lng' here instead of 'name'
+                        'name' => $location->name,  // Use the 'location' directly from the array
+                        'lat' => $location->lat,
+                        'lng' => $location->lng  // Make sure to use 'lng' here instead of 'name'
                     ]);
                 }
             }
@@ -185,7 +186,10 @@ class PostController extends BaseController
             // \DB::commit();
 
             return response()->json(['message' => 'Post created successfully'], 201);
-
+        }
+        catch(\Eception $e){
+            return $this->sendError($e->getMessage());
+        }
     }
 
     /**
