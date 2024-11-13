@@ -104,8 +104,8 @@ class PostController extends BaseController
      */
     public function store(Request $request)
     {
-        try
-        {
+        // try
+        // {
             $validated = \Validator::make($request->all(),[
                 'description' => 'required|string',
                 'privacy' => 'required',
@@ -186,11 +186,11 @@ class PostController extends BaseController
             // \DB::commit();
 
             return response()->json(['message' => 'Post created successfully'], 201);
-        }
-        catch (\Exception $e) {
-            \DB::rollBack();
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+        // }
+        // catch (\Exception $e) {
+        //     \DB::rollBack();
+        //     return response()->json(['error' => $e->getMessage()], 500);
+        // }
     }
 
     /**
