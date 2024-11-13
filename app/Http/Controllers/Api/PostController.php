@@ -127,7 +127,7 @@ class PostController extends BaseController
             // \DB::beginTransaction();
             if($validated->fails()) {
                 Log::info($validated->errors());
-                return $this->sendError($validated->errors()->first());
+                return $this->sendError($validated->errors()->first(),500);
             }
 
             // Create the post
