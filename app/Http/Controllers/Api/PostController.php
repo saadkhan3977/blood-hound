@@ -104,8 +104,6 @@ class PostController extends BaseController
      */
     public function store(Request $request)
     {
-        try
-        {
             $validated = \Validator::make($request->all(),[
                 'description' => 'required|string',
                 'privacy' => 'required',
@@ -123,11 +121,8 @@ class PostController extends BaseController
                 'images.*' => 'file|mimes:mp4,jpeg,png',
             ]);
 
-            // Start the transaction to create the post
-            // \DB::beginTransaction();
             if($validated->fails()) {
-                Log::info($validated->errors());
-                return $this->sendError($validated->errors()->first(),500);
+                return $this->sendError($validated->errors()->first());
             }
 
             // Create the post
@@ -143,16 +138,14 @@ class PostController extends BaseController
             ]);
 
             if ($request->has('location')) {
-                // foreach ($request->location as $key => $location) {
+                foreach ($request->location as $location) {
                     PostLocation::create([
                         'post_id' => $post->id,
-                        'name' => $request->location['name'],
-                        'lat' => $request->location['lat'],
-                        'lng' => $request->location['lng'],
-                        // 'lat' => $location->lat,
-                        // 'lng' => $location->lng,
+                        'name' => $location['name'],  // Use the 'location' directly from the array
+                        'lat' => $location['lat'],
+                        'lng' => $location['lng'],  // Make sure to use 'lng' here instead of 'name'
                     ]);
-                // }
+                }
             }
             // Handle images
             if ($request->hasFile('images')) {
@@ -188,11 +181,7 @@ class PostController extends BaseController
             // \DB::commit();
 
             return response()->json(['message' => 'Post created successfully'], 201);
-        }
-        catch (\Exception $e) {
-            // \DB::rollBack();
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+
     }
 
     /**

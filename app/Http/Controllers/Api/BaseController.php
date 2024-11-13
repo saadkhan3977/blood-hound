@@ -17,13 +17,7 @@ class BaseController extends Controller
         ];
         return response()->json($response, 200);
     }
-
-    // public function user()
-    // {
-    //     return User::first();
-    // }
-
-    public function sendError($error, $errorMessages = [], $code = 422)
+    public function sendError($error, $errorMessages = [], $code = 404)
     {
     	$response = [
             'success' => false,
