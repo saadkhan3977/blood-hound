@@ -28,7 +28,7 @@ class PostController extends BaseController
             $category = $request->category;
             $userId = Auth::id();
 
-            $posts = Post::withCount(['like'])
+            $posts = Post::withCount(['like','comment'])
                 ->with([
                     'images',
                     'locations',
