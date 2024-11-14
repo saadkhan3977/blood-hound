@@ -19,7 +19,7 @@ class Comment extends Model
     // Relationship to replies
     public function replies()
     {
-        return $this->hasMany(Comment::class, 'parent_id')->with('replies.user');
+        return $this->hasMany(Comment::class, 'parent_id');
     }
 
     // Relationship to user
@@ -30,7 +30,7 @@ class Comment extends Model
 
     public function likes()
     {
-        return $this->hasMany(CommentLike::class);
+        return $this->hasMany(CommentLike::class, 'comment_id');
     }
 
     // Check if a specific user has liked the comment
