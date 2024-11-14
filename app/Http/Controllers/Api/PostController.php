@@ -24,7 +24,8 @@ class PostController extends BaseController
      */
     public function index(Request $request)
     {
-        try {
+        try
+        {
             $category = $request->category;
             $userId = Auth::id();
 
@@ -39,23 +40,22 @@ class PostController extends BaseController
                         $query->where('user_id', $userId);
                     },
                     'comment' => function ($query) {
-                        $query->whereNull('parent_id') // Fetch only top-level comments
-                            ->withCount('likes as total_comment_likes') // Count likes for each comment
-                            ->withCount('replies as total_comment_replies') // Count replies for each comment
-                            ->with(['replies' => function ($replyQuery) {
-                                $replyQuery->withCount('likes as total_reply_likes'); // Count likes on each reply
-                            }, 'likes', 'user']); // Load likes and user for each comment
+                        $query->whereNull('parent_id')
+                        ->withCount('likes as total_comment_likes')
+                        ->withCount('replies as total_comment_replies')
+                        ->with(['replies' => function ($replyQuery) {
+                            $replyQuery->withCount('likes as total_reply_likes');
+                        }, 'likes', 'user']);
                     }
                 ])
                 ->where('category', $category)
                 ->where('user_id', $userId)
                 ->get();
 
-            return response()->json([
-                'message' => 'Post List',
-                'post_list' => $posts
-            ], 201);
-        } catch (\Exception $e) {
+            return response()->json(['message' => 'Post List','post_list' => $posts],201);
+        }
+        catch (\Exception $e)
+        {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
