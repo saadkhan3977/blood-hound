@@ -24,26 +24,52 @@ class PostController extends BaseController
      */
     public function index(Request $request)
     {
-        try
-        {
+        try {
             $category = $request->category;
-            $userid = Auth::id();
-            $post = Post::withCount(['like','comment','comment as total_comment_likes' => function ($query) {
-                $query->whereHas('likes');
-            },
-            'comment as total_comment_replies' => function ($query) {
-                $query->whereNotNull('parent_id');
-            },
-            'comment.replies.likes as total_comment_reply_likes'])->with(['images','comment.user','comment.replies','comment.replies.user','locations','tags','my_like'=> function($query) use ($userid) {
-                $query->where('user_id', $userid);
-            }])->where('category',$category)->where('user_id',Auth::id())->get();
-            return response()->json(['message' => 'Post Lists','post_list'=>$post], 201);
-        }
-        catch (\Exception $e)
-        {
+            $userId = Auth::id();
+
+            $posts = Post::withCount([
+                'like',
+                'comment',
+                'comment as total_comment_likes' => function ($query) {
+                    $query->whereHas('likes');
+                },
+                'comment as total_comment_replies' => function ($query) {
+                    $query->whereNotNull('parent_id');
+                }
+            ])
+            ->with([
+                'images',
+                'comment.user',
+                'comment.replies.user',
+                'locations',
+                'tags',
+                'my_like' => function ($query) use ($userId) {
+                    $query->where('user_id', $userId);
+                },
+                'comment.likes', // To access likes on comments
+                'comment.replies.likes' // To access likes on replies
+            ])
+            ->where('category', $category)
+            ->where('user_id', $userId)
+            ->get();
+
+            // Manually calculate `total_comment_reply_likes`
+            foreach ($posts as $post) {
+                $post->total_comment_reply_likes = $post->comment->sum(function ($comment) {
+                    return $comment->replies->sum(fn($reply) => $reply->likes->count());
+                });
+            }
+
+            return response()->json([
+                'message' => 'Post Lists',
+                'post_list' => $posts
+            ], 201);
+        } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
 
     public function gallery(Request $request)
     {
