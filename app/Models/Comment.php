@@ -33,6 +33,13 @@ class Comment extends Model
         return $this->hasMany(CommentLike::class, 'comment_id');
     }
 
+    public function my_like()
+	{
+		$profileId = Auth::id(); // Assuming you are using Laravel's request helper
+	//    print_r($profileId);die;
+	   return $this->hasOne(\App\Models\CommentLike::class)->where('user_id', $profileId);
+	}
+
     // Check if a specific user has liked the comment
     public function isLikedBy($userId)
     {
