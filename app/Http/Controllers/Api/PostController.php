@@ -29,8 +29,8 @@ class PostController extends BaseController
             $userId = Auth::id();
 
             $posts = Post::withCount([
-                'like',
-                'comment',
+                'like as total_post_likes',
+                'comment as total_comment',
                 'comment as total_comment_likes' => function ($query) {
                     $query->whereHas('likes');
                 },
