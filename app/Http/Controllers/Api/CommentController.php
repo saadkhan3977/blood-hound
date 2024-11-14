@@ -106,7 +106,9 @@ class CommentController extends BaseController
         $userId = auth()->id();
 
         // Check if the comment is already liked by the user
-        if ($comment->isLikedBy($userId)) {
+        $like = CommentLike::where('comment_id', $commentId)->where('user_id', $userId)->first();
+
+        if ($like) {
             $like->delete();
             return response()->json(['message' => 'Comment unliked successfully']);
         }
