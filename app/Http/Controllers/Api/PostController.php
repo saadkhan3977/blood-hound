@@ -30,7 +30,11 @@ class PostController extends BaseController
             $userid = Auth::id();
             $post = Post::withCount(['like','comment','comment as total_comment_likes' => function ($query) {
                 $query->whereHas('likes');
-            }])->with(['images','comment.user','comment.replies','comment.replies.user','locations','tags','my_like'=> function($query) use ($userid) {
+            },
+            'comments as total_comment_replies' => function ($query) {
+                $query->whereNotNull('parent_id');
+            },
+            'comments.replies.likes as total_comment_reply_likes'])->with(['images','comment.user','comment.replies','comment.replies.user','locations','tags','my_like'=> function($query) use ($userid) {
                 $query->where('user_id', $userid);
             }])->where('category',$category)->where('user_id',Auth::id())->get();
             return response()->json(['message' => 'Post Lists','post_list'=>$post], 201);
