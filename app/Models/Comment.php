@@ -22,6 +22,7 @@ class Comment extends Model
         return $this->hasMany(Comment::class, 'parent_id');
     }
 
+
     // Relationship to user
     public function user()
     {
