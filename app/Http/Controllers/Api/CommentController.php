@@ -111,7 +111,7 @@ class CommentController extends BaseController
         }
 
         CommentLike::create([
-            'comment_id' => $commentId,
+            'comment_id' => $request->comment_id,
             'user_id' => $userId,
         ]);
 
