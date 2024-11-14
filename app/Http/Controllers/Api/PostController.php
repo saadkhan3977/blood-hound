@@ -39,14 +39,28 @@ class PostController extends BaseController
                     'my_like' => function ($query) use ($userId) {
                         $query->where('user_id', $userId);
                     },
-                    'comment' => function ($query) {
-                        $query->whereNull('parent_id')
-                        ->withCount('likes as total_comment_likes')
-                        ->withCount('replies as total_comment_replies')
-                        ->with(['replies' => function ($replyQuery) {
-                            $replyQuery->withCount('likes as total_reply_likes');
-                        }, 'likes', 'user']);
-                    }
+                    'comment' => function ($query) use ($userId) {
+                    $query->whereNull('parent_id') // Fetch only top-level comments
+                        ->withCount('likes as total_comment_likes') // Count likes for each comment
+                        ->withCount('replies as total_comment_replies') // Count replies for each comment
+                        ->with([
+                            'likes', // Load all likes for this comment
+                            'user',  // Load comment author info
+                            'my_like' => function ($likeQuery) use ($userId) {
+                                $likeQuery->where('user_id', $userId); // Specific like by the current user
+                            },
+                            'replies' => function ($replyQuery) use ($userId) {
+                                $replyQuery->withCount('likes as total_reply_likes') // Count likes on each reply
+                                    ->with([
+                                        'likes',  // Load all likes for this reply
+                                        'user',   // Load reply author info
+                                        'my_like' => function ($replyLikeQuery) use ($userId) {
+                                            $replyLikeQuery->where('user_id', $userId); // Specific like by the current user on replies
+                                        }
+                                    ]);
+                            }
+                        ]);
+                }
                 ])
                 ->where('category', $category)
                 ->where('user_id', $userId)
