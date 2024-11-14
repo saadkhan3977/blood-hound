@@ -19,9 +19,8 @@ class Comment extends Model
     // Relationship to replies
     public function replies()
     {
-        return $this->hasMany(Comment::class, 'parent_id');
+        return $this->hasMany(Comment::class, 'parent_id')->with('replies.user');
     }
-
 
     // Relationship to user
     public function user()
