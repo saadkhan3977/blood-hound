@@ -71,7 +71,7 @@ Route::group(['middleware' => ['api','auth:api'], 'prefix' => 'auth'], function 
     Route::post('post_like', [\App\Http\Controllers\Api\PostController::class,'like']);
     Route::resource('comment', \App\Http\Controllers\Api\CommentController::class);
     Route::post('comment_replies/{CommentID}', [\App\Http\Controllers\Api\CommentController::class,'addReply']);
-    Route::post('comment_like/{CommentID}', [\App\Http\Controllers\Api\CommentController::class, 'likeComment']);
+    Route::post('comment_like', [\App\Http\Controllers\Api\CommentController::class, 'likeComment']);
     Route::post('comment_unlike/{CommentID}', [\App\Http\Controllers\Api\CommentController::class, 'unlikeComment']);
 
 	// Route::resource('pdf',App\Http\Controllers\Api\PDFController::class);
