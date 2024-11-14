@@ -89,9 +89,20 @@ class CommentController extends BaseController
     }
 
 
-    public function likeComment($commentId)
+    public function likeComment(Request $request)
     {
-        $comment = Comment::findOrFail($commentId);
+
+        $validator = Validator::make($request->all(), [
+            'comment_id' => 'required|exists:comments,id',
+            // 'description' => 'required|string',
+        ]);
+
+        if($validator->fails())
+        {
+            return $this->sendError($validator->errors()->first(),500);
+        }
+
+        $comment = Comment::findOrFail($request->comment_id);
         $userId = auth()->id();
 
         // Check if the comment is already liked by the user
