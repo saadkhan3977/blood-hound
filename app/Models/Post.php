@@ -38,10 +38,6 @@ class Post extends Model
         return $this->hasMany(PostLike::class);
     }
 
-    // public function user()
-    // {
-    //     return $this->hasOne(User::class);
-    // }
 
     // public function comment()
     // {
