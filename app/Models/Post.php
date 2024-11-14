@@ -46,6 +46,6 @@ class Post extends Model
 
     public function comment()
     {
-        return $this->hasMany(Comment::class)->whereNull('parent_id'); // Only top-level comments
+        return $this->hasMany(Comment::class); // Only top-level comments
     }
 }
