@@ -90,6 +90,7 @@ class PostController extends BaseController
             {
                 $data['image'] = PostImage::whereIn('post_id',$postids)->where('type',"image")->get();
                 $data['video'] = PostImage::whereIn('post_id',$postids)->where('type',"video")->get();
+                $data['saved_post'] = auth()->user()->savedPosts()->with('post','post.images')->get();
                 $data['post'] =  Post::with('images')->where('user_id',Auth::id())->get();
             }
             return response()->json(['message' => 'Gallery Lists','data'=>$data], 201);
