@@ -74,7 +74,7 @@ Route::group(['middleware' => ['api','auth:api'], 'prefix' => 'auth'], function 
     Route::post('comment_like', [\App\Http\Controllers\Api\CommentController::class, 'likeComment']);
     Route::post('comment_unlike/{CommentID}', [\App\Http\Controllers\Api\CommentController::class, 'unlikeComment']);
 
-    Route::post('/posts_save/{post}', [\App\Http\Controllers\Api\SavedPostController::class, 'toggleSave']);
+    Route::post('/posts_save', [\App\Http\Controllers\Api\SavedPostController::class, 'toggleSave']);
     Route::get('/saved-posts', [\App\Http\Controllers\Api\SavedPostController::class, 'getSavedPosts']);
 
 	// Route::resource('pdf',App\Http\Controllers\Api\PDFController::class);

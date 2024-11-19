@@ -10,8 +10,20 @@ use Auth;
 
 class SavedPostController extends Controller
 {
-    public function toggleSave(Request $request, $postId)
+    public function toggleSave(Request $request)
     {
+
+        $validator = Validator::make($request->all(), [
+            'post_id' => 'required|exists:posts,id',
+        ]);
+
+        if($validator->fails())
+        {
+                return $this->sendError($validator->errors()->first());
+        }
+
+        $postId = $request->post_id;
+
         $user = auth()->user();
         $savedPost = SavedPost::where('user_id', $user->id)
             ->where('post_id', $postId)
