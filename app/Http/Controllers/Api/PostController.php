@@ -80,11 +80,17 @@ class PostController extends BaseController
     {
         try
         {
+            $postids = Post::where('user_id',Auth::id())->get()->pluck('id');
             if($request->type)
             {
                 $type = ($request->type == 'image') ? 'image' : 'video';
-                $postids = Post::where('user_id',Auth::id())->get()->pluck('id');
                 $data[$type] = PostImage::whereIn('post_id',$postids)->where('type',$type)->get();
+            }
+            else
+            {
+                $data['image'] = PostImage::whereIn('post_id',$postids)->where('type',"image")->get();
+                $data['video'] = PostImage::whereIn('post_id',$postids)->where('type',"video")->get();
+                $data['post'] =  Post::where('user_id',Auth::id())->get();
             }
             return response()->json(['message' => 'Gallery Lists','data'=>$data], 201);
         }
