@@ -86,7 +86,7 @@ class PostController extends BaseController
                 $postids = Post::where('user_id',Auth::id())->get()->pluck('id');
                 $data[$type] = PostImage::whereIn('post_id',$postids)->where('type',$type)->get();
             }
-            return response()->json(['message' => 'Gallery Lists','gallery_list'=>$data], 201);
+            return response()->json(['message' => 'Gallery Lists','data'=>$data], 201);
         }
         catch (\Exception $e)
         {
