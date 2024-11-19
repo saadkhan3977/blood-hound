@@ -48,4 +48,10 @@ class Post extends Model
     {
         return $this->hasMany(Comment::class); // Only top-level comments
     }
+
+    public function savedByUsers()
+    {
+        return $this->hasMany(SavedPost::class);
+}
+
 }

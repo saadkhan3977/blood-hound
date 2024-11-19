@@ -52,6 +52,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Comment::class, 'comment_likes');
     }
 
+    public function savedPosts()
+    {
+        return $this->hasMany(SavedPost::class);
+    }
+
     // public function total_document()
     // {
     //     return $this->hasMany(Document::class,'user_id','id');
