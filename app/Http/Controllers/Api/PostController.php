@@ -93,7 +93,40 @@ class PostController extends BaseController
             {
                 $data['image'] = PostImage::whereIn('post_id',$postids)->where('type',"image")->get();
                 $data['video'] = PostImage::whereIn('post_id',$postids)->where('type',"video")->get();
-                $data['saved_post'] = auth()->user()->savedPosts()->with('post','post.images')->get();
+                $saved_postids = auth()->user()->savedPosts()->with('post','post.images')->get()->pluck('post_id');
+                $data['saved_post'] = Post::withCount(['like as total_post_like','comment as total_comment' => function ($query) use ($userId) {
+                                            $query->whereNull('parent_id');
+                                        }])
+                                    ->with([
+                                        'images',
+                                        'locations',
+                                        'tags',
+                                        'my_like' => function ($query) use ($userId) {
+                                            $query->where('user_id', $userId);
+                                        },
+                                        'comment' => function ($query) use ($userId) {
+                                        $query->whereNull('parent_id')
+                                            ->withCount('likes as total_comment_likes')
+                                            ->withCount('replies as total_comment_replies')
+                                            ->with([
+                                                'likes',
+                                                'user',
+                                                'my_like' => function ($likeQuery) use ($userId) {
+                                                    $likeQuery->where('user_id', $userId);
+                                                },
+                                                'replies' => function ($replyQuery) use ($userId) {
+                                                    $replyQuery->withCount('likes as total_reply_likes')
+                                                        ->with([
+                                                            'likes',
+                                                            'user',
+                                                            'my_like' => function ($replyLikeQuery) use ($userId) {
+                                                                $replyLikeQuery->where('user_id', $userId);
+                                                            }
+                                                        ]);
+                                                }
+                                            ]);
+                                    }
+                                    ])->whereIn('id',$saved_postids)->get();
                 $data['post'] =  Post::withCount(['like as total_post_like','comment as total_comment' => function ($query) use ($userId) {
                                         $query->whereNull('parent_id');
                                     }])
@@ -126,7 +159,7 @@ class PostController extends BaseController
                                             }
                                         ]);
                                 }
-                                ])->with('images')->where('user_id',Auth::id())->get();
+                                ])->where('user_id',Auth::id())->get();
                                 }
             return response()->json(['message' => 'Gallery Lists','data'=>$data], 201);
         }
