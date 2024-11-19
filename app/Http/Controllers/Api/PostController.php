@@ -40,22 +40,22 @@ class PostController extends BaseController
                         $query->where('user_id', $userId);
                     },
                     'comment' => function ($query) use ($userId) {
-                    $query->whereNull('parent_id') // Fetch only top-level comments
-                        ->withCount('likes as total_comment_likes') // Count likes for each comment
-                        ->withCount('replies as total_comment_replies') // Count replies for each comment
+                    $query->whereNull('parent_id')
+                        ->withCount('likes as total_comment_likes')
+                        ->withCount('replies as total_comment_replies')
                         ->with([
-                            'likes', // Load all likes for this comment
-                            'user',  // Load comment author info
+                            'likes',
+                            'user',
                             'my_like' => function ($likeQuery) use ($userId) {
-                                $likeQuery->where('user_id', $userId); // Specific like by the current user
+                                $likeQuery->where('user_id', $userId);
                             },
                             'replies' => function ($replyQuery) use ($userId) {
-                                $replyQuery->withCount('likes as total_reply_likes') // Count likes on each reply
+                                $replyQuery->withCount('likes as total_reply_likes')
                                     ->with([
-                                        'likes',  // Load all likes for this reply
-                                        'user',   // Load reply author info
+                                        'likes',
+                                        'user',
                                         'my_like' => function ($replyLikeQuery) use ($userId) {
-                                            $replyLikeQuery->where('user_id', $userId); // Specific like by the current user on replies
+                                            $replyLikeQuery->where('user_id', $userId);
                                         }
                                     ]);
                             }
@@ -83,6 +83,7 @@ class PostController extends BaseController
         try
         {
             $postids = Post::where('user_id',Auth::id())->get()->pluck('id');
+            $userId = Auth::id();
             if($request->type)
             {
                 $type = ($request->type == 'image') ? 'image' : 'video';
@@ -93,8 +94,40 @@ class PostController extends BaseController
                 $data['image'] = PostImage::whereIn('post_id',$postids)->where('type',"image")->get();
                 $data['video'] = PostImage::whereIn('post_id',$postids)->where('type',"video")->get();
                 $data['saved_post'] = auth()->user()->savedPosts()->with('post','post.images')->get();
-                $data['post'] =  Post::with('images')->where('user_id',Auth::id())->get();
-            }
+                $data['post'] =  Post::withCount(['like as total_post_like','comment as total_comment' => function ($query) use ($userId) {
+                                        $query->whereNull('parent_id');
+                                    }])
+                                ->with([
+                                    'images',
+                                    'locations',
+                                    'tags',
+                                    'my_like' => function ($query) use ($userId) {
+                                        $query->where('user_id', $userId);
+                                    },
+                                    'comment' => function ($query) use ($userId) {
+                                    $query->whereNull('parent_id')
+                                        ->withCount('likes as total_comment_likes')
+                                        ->withCount('replies as total_comment_replies')
+                                        ->with([
+                                            'likes',
+                                            'user',
+                                            'my_like' => function ($likeQuery) use ($userId) {
+                                                $likeQuery->where('user_id', $userId);
+                                            },
+                                            'replies' => function ($replyQuery) use ($userId) {
+                                                $replyQuery->withCount('likes as total_reply_likes')
+                                                    ->with([
+                                                        'likes',
+                                                        'user',
+                                                        'my_like' => function ($replyLikeQuery) use ($userId) {
+                                                            $replyLikeQuery->where('user_id', $userId);
+                                                        }
+                                                    ]);
+                                            }
+                                        ]);
+                                }
+                                ])->with('images')->where('user_id',Auth::id())->get();
+                                }
             return response()->json(['message' => 'Gallery Lists','data'=>$data], 201);
         }
         catch (\Exception $e)
