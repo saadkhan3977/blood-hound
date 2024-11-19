@@ -88,10 +88,10 @@ class PostController extends BaseController
             $type = $request->type;
 
             if ($type) {
-                $data[$type] = PostImage::whereIn('post_id', $postIds)->where('type', $type)->get();
+                $data[$type] = $this->getMediaWithDetails($postIds, $type, $userId);
             } else {
-                $data['image'] = PostImage::whereIn('post_id', $postIds)->where('type', 'image')->get();
-                $data['video'] = PostImage::whereIn('post_id', $postIds)->where('type', 'video')->get();
+                $data['image'] = $this->getMediaWithDetails($postIds, 'image', $userId);
+                $data['video'] = $this->getMediaWithDetails($postIds, 'video', $userId);
 
                 $savedPostIds = auth()->user()->savedPosts()->pluck('post_id');
                 $data['saved_post'] = $this->getPosts($userId, $savedPostIds);
@@ -104,40 +104,49 @@ class PostController extends BaseController
         }
     }
 
+    private function getMediaWithDetails($postIds, $type, $userId)
+    {
+        return PostImage::whereIn('post_id', $postIds)
+            ->where('type', $type)
+            ->with([
+                'post' => function ($query) use ($userId) {
+                    $query->withCount([
+                        'like as total_post_like',
+                        'comment as total_comment' => fn ($q) => $q->whereNull('parent_id'),
+                    ])
+                    ->with([
+                        'my_like' => fn ($q) => $q->where('user_id', $userId),
+                        'comment' => fn ($q) => $q->whereNull('parent_id')
+                            ->withCount(['likes as total_comment_likes', 'replies as total_comment_replies'])
+                            ->with([
+                                'likes',
+                                'user',
+                                'replies' => fn ($replyQuery) => $replyQuery->withCount('likes as total_reply_likes'),
+                            ]),
+                    ]);
+                },
+            ])
+            ->get();
+    }
 
     private function getPosts($userId, $postIds)
     {
         return Post::withCount([
             'like as total_post_like',
-            'comment as total_comment' => function ($query) {
-                $query->whereNull('parent_id');
-            }
+            'comment as total_comment' => fn ($q) => $q->whereNull('parent_id'),
         ])
         ->with([
             'images',
             'locations',
             'tags',
-            'my_like' => fn ($query) => $query->where('user_id', $userId),
-            'comment' => function ($query) use ($userId) {
-                $query->whereNull('parent_id')
-                    ->withCount([
-                        'likes as total_comment_likes',
-                        'replies as total_comment_replies'
-                    ])
-                    ->with([
-                        'likes',
-                        'user',
-                        'my_like' => fn ($likeQuery) => $likeQuery->where('user_id', $userId),
-                        'replies' => function ($replyQuery) use ($userId) {
-                            $replyQuery->withCount('likes as total_reply_likes')
-                                ->with([
-                                    'likes',
-                                    'user',
-                                    'my_like' => fn ($replyLikeQuery) => $replyLikeQuery->where('user_id', $userId),
-                                ]);
-                        }
-                    ]);
-            }
+            'my_like' => fn ($q) => $q->where('user_id', $userId),
+            'comment' => fn ($q) => $q->whereNull('parent_id')
+                ->withCount(['likes as total_comment_likes', 'replies as total_comment_replies'])
+                ->with([
+                    'likes',
+                    'user',
+                    'replies' => fn ($replyQuery) => $replyQuery->withCount('likes as total_reply_likes'),
+                ]),
         ])
         ->whereIn('id', $postIds)
         ->get();
