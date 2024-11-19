@@ -62,7 +62,7 @@ class PostController extends BaseController
                         ]);
                 }
                 ])
-                ->where('category', $category)
+                ->where('category', ($category) ? $category : null)
                 ->where('user_id', $userId)
                 ->get();
 
