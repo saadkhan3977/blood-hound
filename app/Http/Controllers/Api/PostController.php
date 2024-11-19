@@ -80,10 +80,13 @@ class PostController extends BaseController
     {
         try
         {
-            $type = ($request->type == 'image') ? 'image' : 'video';
-            $postids = Post::where('user_id',Auth::id())->get()->pluck('id');
-            $gallery = PostImage::whereIn('post_id',$postids)->where('type',$type)->get();
-            return response()->json(['message' => 'Gallery Lists','gallery_list'=>$gallery], 201);
+            if($request->type)
+            {
+                $type = ($request->type == 'image') ? 'image' : 'video';
+                $postids = Post::where('user_id',Auth::id())->get()->pluck('id');
+                $data[$type] = PostImage::whereIn('post_id',$postids)->where('type',$type)->get();
+            }
+            return response()->json(['message' => 'Gallery Lists','gallery_list'=>$data], 201);
         }
         catch (\Exception $e)
         {
@@ -93,16 +96,16 @@ class PostController extends BaseController
 
     public function like(Request $request)
     {
-         try
-         {
-             $validator = Validator::make($request->all(), [
+        try
+        {
+            $validator = Validator::make($request->all(), [
                  'post_id' => 'required|exists:posts,id',
-             ]);
+            ]);
 
-             if($validator->fails())
-             {
+            if($validator->fails())
+            {
                  return $this->sendError($validator->errors()->first());
-             }
+            }
 
             $input['user_id'] = Auth::id();
             $input['post_id'] = $request->post_id;
