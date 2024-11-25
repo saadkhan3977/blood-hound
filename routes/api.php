@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Events\MessageSent;
 
 
-
+use App\Http\Controllers\Api\CommunityController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +43,15 @@ Route::post('password/code/check', [\App\Http\Controllers\Api\CodeCheckControlle
 Route::group(['middleware' => ['api','auth:api'], 'prefix' => 'auth'], function ()
 {
 
+
+
+    Route::prefix('communities')->group(function () {
+        Route::get('/', [CommunityController::class, 'index']);         // List all communities
+        Route::post('/', [CommunityController::class, 'store']);        // Create a new community
+        Route::get('/{id}', [CommunityController::class, 'show']);      // Show a single community
+        Route::put('/{id}', [CommunityController::class, 'update']);    // Update a community
+        Route::delete('/{id}', [CommunityController::class, 'destroy']);// Delete a community
+    });
 
     // Route::post('/message', function (Request $request) {
     //     // Create a dummy message for testing
