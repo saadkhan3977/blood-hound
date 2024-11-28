@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Community;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class CommunityController extends Controller
@@ -20,7 +22,6 @@ class CommunityController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required|exists:users,id',
             'name' => 'required|string|max:255',
             'privacy' => 'required|string',
             'visibility' => 'required|string',
@@ -33,8 +34,11 @@ class CommunityController extends Controller
         }
 
         $data = $request->all();
+        $data['user_id'] = Auth::id(); // Get the user ID from the authenticated user
+
+        // Handle file upload
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('community_images', 'public');
+            $data['image'] = $request->file('image')->store('community_images', 'public'); // Store in storage/app/public/community_images
         }
 
         $community = Community::create($data);
@@ -63,6 +67,11 @@ class CommunityController extends Controller
             return response()->json(['success' => false, 'message' => 'Community not found'], 404);
         }
 
+        // Ensure the authenticated user is the owner of the community
+        if ($community->user_id !== Auth::id()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
+
         $validator = Validator::make($request->all(), [
             'name' => 'sometimes|required|string|max:255',
             'privacy' => 'sometimes|required|string',
@@ -76,7 +85,15 @@ class CommunityController extends Controller
         }
 
         $data = $request->all();
+
+        // Handle file update
         if ($request->hasFile('image')) {
+            // Delete old file
+            if ($community->image && Storage::exists("public/{$community->image}")) {
+                Storage::delete("public/{$community->image}");
+            }
+
+            // Store new file
             $data['image'] = $request->file('image')->store('community_images', 'public');
         }
 
@@ -94,8 +111,18 @@ class CommunityController extends Controller
             return response()->json(['success' => false, 'message' => 'Community not found'], 404);
         }
 
+        // Ensure the authenticated user is the owner of the community
+        if ($community->user_id !== Auth::id()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
+
+        // Delete the associated image if it exists
+        if ($community->image && Storage::exists("public/{$community->image}")) {
+            Storage::delete("public/{$community->image}");
+        }
+
         $community->delete();
 
-        return response()->json(['success' => true, 'message' => 'Community deleted successfully'], 200);
+        return response()->json(['success' => true, 'message' => 'Community and associated image deleted successfully'], 200);
     }
 }
