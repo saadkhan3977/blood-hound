@@ -49,7 +49,10 @@ class CommunityController extends Controller
     // Show a Single Community
     public function show($id)
     {
-        $community = Community::with('user')->find($id);
+        $community = Community::with(['user', 'post' => function($query) use ($id) {
+            $communityName = Community::find($id)->name; // Community name fetch karenge
+            $query->where('assetname', $communityName);  // assetname ko community name ke sath match karenge
+        }])->find($id);
 
         if (!$community) {
             return response()->json(['success' => false, 'message' => 'Community not found'], 404);
