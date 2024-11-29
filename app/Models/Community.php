@@ -15,4 +15,9 @@ class Community extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function post()
+    {
+        return $this->hasMane(Post::class);
+    }
 }
