@@ -18,6 +18,6 @@ class Community extends Model
 
     public function post()
     {
-        return $this->hasMane(Post::class);
+        return $this->hasMany(Post::class);
     }
 }
